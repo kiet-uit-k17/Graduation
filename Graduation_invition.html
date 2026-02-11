@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Graduation</title>
+
+<style>
+html,body{
+margin:0;
+padding:0;
+overflow:hidden;
+font-family:monospace;
+background:black;
+color:#e5e7eb;
+}
+
+/* MATRIX */
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+/* CENTER */
+.wrapper{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+position:relative;
+z-index:5;
+}
+
+/* CARD */
+.container{
+max-width:900px;
+width:100%;
+background:rgba(2,6,23,.7);
+padding:40px;
+border-radius:18px;
+border:1px solid #00ffff;
+box-shadow:0 0 60px #00ffff55;
+text-align:center;
+backdrop-filter:blur(4px);
+}
+
+/* TITLE */
+.glitch{
+font-size:clamp(28px,5vw,42px);
+color:#00ffff;
+animation:glitch 1s infinite;
+}
+
+@keyframes glitch{
+0%{text-shadow:3px 0 red,-3px 0 cyan}
+50%{text-shadow:-3px 0 red,3px 0 cyan}
+100%{text-shadow:3px 0 red,-3px 0 cyan}
+}
+
+.line{
+height:1px;
+background:#00ffff;
+margin:20px 0;
+}
+
+.highlight{color:#00ffff}
+
+p{
+font-size:clamp(14px,2.5vw,18px);
+line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="wrapper">
+<div class="container">
+
+<div class="glitch">GRADUATION INVITATION</div>
+
+<div class="line"></div>
+
+<p><span class="highlight">Trân trọng mời đến với lễ tốt nghiệp</span></p>
+
+<p>
+🕒 Thời gian: [........]<br>
+📍 Địa điểm: [........]<br>
+</p>
+
+<p class="highlight">Nguyễn Tuấn Kiệt — Information Security</p>
+<p class="highlight">Trường Đại học Công Nghệ Thông Tin - ĐHQG TPHCM</p>
+
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+let width,height,fontSize,columns,drops;
+
+function setup(){
+const dpr=window.devicePixelRatio||1;
+width=innerWidth;
+height=innerHeight;
+
+canvas.width=width*dpr;
+canvas.height=height*dpr;
+canvas.style.width=width+"px";
+canvas.style.height=height+"px";
+
+ctx.setTransform(dpr,0,0,dpr,0,0);
+
+fontSize=Math.max(16,width/80);
+columns=Math.floor(width/fontSize);
+drops=Array(columns).fill(1);
+}
+
+setup();
+window.addEventListener("resize",setup);
+
+const chars="01101010101010101010101011010110101010101010";
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,.15)";
+ctx.fillRect(0,0,width,height);
+
+ctx.fillStyle="#00ffff";
+ctx.font=fontSize+"px monospace";
+ctx.shadowColor="#00ffff";
+ctx.shadowBlur=8;
+
+for(let i=0;i<drops.length;i++){
+const t=chars[Math.random()*chars.length|0];
+ctx.fillText(t,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>height&&Math.random()>.95)drops[i]=0;
+drops[i]++;
+}
+
+requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
